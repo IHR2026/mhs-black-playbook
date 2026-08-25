@@ -117,7 +117,7 @@ const ROSTER = [
 ];
 
 /* Packages: side, label, and each spot -> list of players who play it (no depth order shown in the app).
-   hidden:true keeps a package out of the app until you're ready to show it. */
+   hidden:true keeps a package's own section off the Offense/Defense tabs; hidden DEFENSE packages still count toward each kid's positions so backups know their jobs. */
 const PACKAGES = [
  { id:"base-o", side:"O", name:"Base Offense", desc:"Zone-blocking spread. Y attached to RT, H in the left slot, X and Z on the line.",
    spots:{ X:["Chase P.","Malachi R."], LT:["Camden M."], LG:["Logan M.","Tae B."],
@@ -435,7 +435,7 @@ const shortName = n => n;
 /* Every spot a kid holds: [{pkg, spot, string}] */
 function assignments(name){
   const out=[];
-  PACKAGES.filter(k=>!k.hidden).forEach(pkg=>Object.entries(pkg.spots).forEach(([spot,list])=>{
+  PACKAGES.filter(k=>!k.hidden||k.side==="D").forEach(pkg=>Object.entries(pkg.spots).forEach(([spot,list])=>{
     const i=list.indexOf(name); if(i>=0) out.push({pkg,spot,string:i+1});
   }));
   return out;
