@@ -89,6 +89,25 @@ input[type=file]{display:none}
 textarea,pre{width:100%;background:#000;color:var(--chalk);border:1px solid rgba(244,243,236,.2);border-radius:6px;padding:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.5;white-space:pre-wrap}
 .warn{border-left:3px solid var(--red);padding:8px 12px;background:rgba(214,69,69,.1);font-size:13px;line-height:1.5;margin:8px 0}
 .ok{border-left:3px solid var(--gold);padding:8px 12px;background:rgba(232,57,60,.1);font-size:13px;line-height:1.5;margin:8px 0}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0 4px}
+.tbl table{min-width:100%;font-size:13px}
+.tbl td,.tbl th{white-space:nowrap;padding:6px 8px}
+.tbl tr.noterow td{white-space:normal;color:var(--muted);font-size:12px;padding-top:0;border-bottom:1px solid rgba(244,243,236,.1)}
+.tbl tr:has(+ tr.noterow) td{border-bottom:0}
+.tbl.wrap td,.tbl.wrap th{white-space:normal}
+.tbl td.wrapc{white-space:normal;min-width:110px}
+.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tr.total td{border-top:1px solid rgba(244,243,236,.35);font-weight:700}
+.good{color:#6fd48a;font-weight:700} .bad{color:#ff7a7a;font-weight:700}
+.gcard{background:var(--ink-2);border:1px solid rgba(244,243,236,.12);border-radius:8px;padding:14px;text-align:left;width:100%}
+.gcard .disp{font-size:24px;line-height:1}
+.pbp{display:flex;flex-direction:column;gap:6px}
+.pr{display:grid;grid-template-columns:44px 1fr 74px;gap:10px;align-items:start;background:var(--ink-2);border:1px solid rgba(244,243,236,.1);border-left:3px solid var(--muted);border-radius:6px;padding:8px 10px}
+.pr.o{border-left-color:var(--red)} .pr.d{border-left-color:#f4f3ec}
+.pn{font-family:"Bebas Neue",Impact,sans-serif;font-size:22px;line-height:1;color:var(--chalk)} .pn span{display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);margin-top:2px}
+.pp{font-size:14px;font-weight:600;line-height:1.3} .pp em{font-style:normal;font-weight:500;color:var(--muted);font-size:12px}
+.pt{font-size:12px;color:var(--muted);line-height:1.4;margin-top:2px}
+.pg{text-align:right;font-variant-numeric:tabular-nums} .pg b{display:block;font-size:16px} .pg span{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;margin-top:2px}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
 .legend i{display:inline-block;width:22px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
 </style>
@@ -105,6 +124,7 @@ textarea,pre{width:100%;background:#000;color:var(--chalk);border:1px solid rgba
   <button data-v="defense">Defense</button>
   <button data-v="plays">Plays</button>
   <button data-v="depth">Depth</button>
+  <button data-v="games">Games</button>
   <button data-v="coach">Coach</button>
 </nav>
 <main id="main"></main>
@@ -427,6 +447,45 @@ const PLAYS = [
 ];
 
 /* =====================================================================
+   GAMES — recaps and box scores. Names use the same short form as the roster.
+   ===================================================================== */
+const GAMES = [
+ { id:"duffy-bowl-2026", title:"Duffy Bowl Scrimmage", opp:"Argyle White", date:"Aug 25, 2026", result:"Scrimmage",
+   summary:[["Plays charted","19","21"],["Touchdowns","2","3 allowed"],["Turnovers","0 lost","2 gained (both fumbles recovered)"],["Sacks","2 allowed","1 recorded"],["Explosives (15+)","3 — 35-yd TD, 33-yd TD, 24-yd pass","1 allowed — 22-yd run"]],
+   passing:[["Brooks G.","4","4","100.0","36","0","0","24","Perfect on his throws. Post to Bevilacqua for 24 on 4th-and-31 was the throw of the day. Great escapability under pressure."]],
+   rushing:[["Phoenix K.","4","80","20.0","2","35","27 Sweep 35-yd TD, 4th-and-7 conversion breaking five tackles, and a 33-yd TD to close."],
+            ["Brooks G. (scr)","3","6","2.0","0","7","Scrambles on called pass plays. Tough runs when the pocket broke down."],
+            ["William A.","1","2","2.0","0","2","Jet sweep, good cutback."],
+            ["Knox S.","1","-4","-4.0","0","-4",""],["Krue K.","1","-5","-5.0","0","-5",""],["Michael L.","1","-6","-6.0","0","-6",""],["Team","3","-24","-8.0","0","—",""],["Total","14","49","3.5","2","35",""]],
+   receiving:[["Mario B.","1","1","24","24.0","0","24","Post on 4th-and-31. Great catch and run after."],
+              ["Phoenix K.","2","2","6","3.0","0","4","Both from the flat off rollouts."],
+              ["William A.","1","1","6","6.0","0","6","Flat route, great throw and catch."],["Total","4","4","36","9.0","0","24",""]],
+   blocking:[["Camden M.","11","Pancaked two defenders on the left edge with Morse."],["Logan M.","11","Pancaked two defenders on the left edge with McDonald."],
+             ["Tae B.","19","Solid pass protection on the left side on Green's roll left."],["Camden M.","19","Solid pass protection on the left side on Green's roll left."],
+             ["Knox S.","32","Drove the outside linebacker four yards on the edge."],["Knox S.","34","Picked up the blitz on the 24-yard post to Bevilacqua."],
+             ["Phoenix K.","28","Clean blitz pickup on the outside linebacker; Ashmore catch for 6."],["Offensive line","15","Clean protection on Green's rollout completion to Keliikipi."],["Offensive line","14","Line graded well as a group on the 27 Sweep 35-yard TD."]],
+   defense:[["Knox S.","0","0","0","0","4","0","1","Four pressures: forced two rollouts, flushed the QB into Irwin's sack, forced a QB scramble. Pass breakup on the slot."],
+            ["Raymond G.","1","1","2","0","1","1","0","Gap penetration forced the fumble at the 6, recovered at the 5 — goal-line takeaway. Tackle on QB run; assist on the 4th-down stop."],
+            ["Malachi R.","1","1","2","0","0","1","0","Forced fumble we recovered. Filled downhill on 3rd-and-1 and made the tackle."],
+            ["Brady B.","2","0","2","0","0","0","0","Tackle on QB run right; stop on QB draw."],
+            ["Logan S.","1","1","2","0","0","0","0","Assist on the first live-downs run; pushed ballcarrier out of bounds at the 12."],
+            ["Phoenix K.","1","1","2","0","0","0","0","Sideline pursuit tackle on swing pass. Good flow to the ball noted twice."],
+            ["Dawes I.","1","0","1","1","0","0","0","Sack for -1 off Svor's flush."],
+            ["Mario B.","1","0","1","0","0","0","0","Tackle on the cutback. Good flow to the ball."],
+            ["Beau F.","1","0","1","0","0","0","0","Tackle on the left side."],
+            ["Tae B.","0","0","0","0","1","0","0","Quick penetration into the backfield."],
+            ["#7","1","0","1","0","0","0","0","Tackle on 6-yard run at the 12."],["Total","10","4","14","1","6","2","1",""]],
+   takeaways:[["9","Scrimmage, inside handoff","Renshaw forced the fumble, MHS recovered."],["38","2nd-and-4 at our 6","Gomez Wickes shot the gap and forced the fumble; MHS recovered at the 5 to end the drive at the goal line."]],
+   pbpNote:"Segment 1: open scrimmage, every snap from the 35, no downs. Segment 2: live downs. O = MHS Black offense, D = MHS Black defense.",
+   pbp:[["1","D","—","Run right","+4","","Svor penetration forces cutback; Bevilacqua tackle"],["2","D","—","Shotgun, QB run right","+3","","Betts tackle"],["3","D","—","Doubles, rollout R, pass to flat (RB)","—","TD",""],["4","D","—","Doubles, run","+1","","Burton-Lindbeck quick penetration; Faris tackle"],["5","D","—","Doubles, long pass","0","INC","Good coverage by Svor on slot"],["6","D","—","Doubles, pressure forces rollout L","—","TD","Svor penetration"],["7","D","—","Doubles, swing pass R to RB","+8","","Keliikipi pursuit, tackle at sideline"],["8","D","—","Doubles, rollout R, wheel from slot","—","TD",""],["9","D","—","Doubles, inside handoff","0","FUM / MHS","Renshaw forced fumble, we recover"],["10","D","—","Bad snap","-3","","Opponent botched snap"],
+        ["11","O","—","Run right (Svor)","-4","","McDonald and Morse pancaked two defenders on the left edge"],["12","O","—","Jet motion sweep","0","BOTCHED",""],["13","O","—","Run up middle (Keliikipi)","0","",""],["14","O","—","27 Sweep (Keliikipi)","+35","TD","Solid blocking; Keliikipi to the house"],["15","O","—","Rollout R (Green), flat to Keliikipi","+4","","Great scramble and release; clean protection"],["16","O","—","Bad snap","-9","",""],["17","O","—","Pass, Green rolls L, tucks","+7","","Solid run"],["18","O","—","Shotgun run (Lambert)","-6","",""],["19","O","—","Green rolls L","+4","","Solid pass pro on the left side — Burton-Lindbeck and McDonald"],
+        ["20","D","1-10 own 35","Run up middle","+8","","Renshaw + Sales tackle"],["21","D","2-2","Pass, QB flushed","+1","","Svor pressure; Gomez Wickes tackle"],["22","D","3-1","Direct snap QB, run middle","+5","1ST DN","Renshaw fills hole, makes tackle"],["23","D","1-10","Pass","-1","SACK","Svor flush, Irwin sack"],["24","D","2-11 @22","Swing pass L","0","INC","Good pressure Svor; good flow Keliikipi, Bevilacqua"],["25","D","3-11","Trips R, rollout R","0","INC","Solid coverage all around"],["26","D","4-11","Rollout R, cuts back L","+5","TO DOWNS","Tackle Gomez Wickes + Keliikipi"],
+        ["27","O","1-10 own 35","Pass, Green rolls R, cuts back L","-5","",""],["28","O","2-15","Pass to Ashmore in flat","+6","","Great throw; Keliikipi blitz pickup"],["29","O","3-9","Swing pass Keliikipi","+2","","Good throw"],["30","O","4-7","Run Keliikipi","+12","1ST DN","Broke 5 tackles to convert 4th down"],["31","O","1-10","Pass","-4","SACK",""],["32","O","2-14","Jet sweep to H (Klausman)","-5","","Svor drove the OLB 4 yards on the edge"],["33","O","3-19","Snap overhead","-12","",""],["34","O","4-31","Post to Bevilacqua","+24","TO DOWNS","Amazing throw, catch, run; Svor blitz pickup"],
+        ["35","D","1-10","QB draw","0","","Tackle Betts"],["36","D","2-10 @34","Run middle, cutback to B gap","+22","","Sales pushes ballcarrier OB at the 12"],["37","D","1-10 @12","Run up middle","+6","","Tackle #7"],["38","D","2-4 @6","Inside run","0","FUM / MHS","Gomez Wickes penetration, forced fumble, recovered at the 5"],["39","O","1-10 own 35","Jet sweep Ashmore","+2","","Good cutback"],["40","O","2-8 @33","Run Keliikipi","+33","TD","Keliikipi to the house"]]
+ }
+];
+
+/* =====================================================================
    APP
    ===================================================================== */
 let plays = PLAYS.map(p=>p);
@@ -510,6 +569,34 @@ function diagram(play, highlight, fkey, hole){
   });
   return s+"</svg>";
 }
+function tbl(head, rows, opts={}){
+  const numCols = opts.num||[]; const noteCol = opts.note;
+  const heads = head.filter((h,i)=>i!==noteCol);
+  return `<div class="tbl ${opts.wrap?'wrap':''}"><table><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join("")}</tr>${rows.map(r=>{
+    const isTotal=/^total$/i.test(r[0]);
+    const cells=r.map((c,i)=>{ if(i===noteCol) return ""; let cls=numCols.includes(i)?'num':''; if((opts.wrapCols||[]).includes(i)) cls+=' wrapc'; if(opts.res===i && c){ const good = (r[1]==='O' ? /TD|1ST|DOWNS/.test(c) : /FUM|SACK|DOWNS|INC/.test(c)); const bad = (r[1]==='O' ? /SACK|BOTCHED/.test(c) : /TD/.test(c)); cls += good?' good':(bad?' bad':''); } return `<td class="${cls}">${esc(c)}</td>`; }).join("");
+    const note = (noteCol!==undefined && r[noteCol]) ? `<tr class="noterow"><td colspan="${heads.length}">${esc(r[noteCol])}</td></tr>` : "";
+    return `<tr class="${isTotal?'total':''}">${cells}</tr>${note}`; }).join("")}</table></div>`;
+}
+function gamePage(id){
+  const g=GAMES.find(x=>x.id===id); if(!g) return;
+  main.innerHTML = `<h2 class="disp">${esc(g.title)}</h2><p class="note">vs ${esc(g.opp)} · ${esc(g.date)}</p>
+   <h3 class="disp">Team summary</h3>${tbl(["","Offense","Defense"], g.summary, {wrap:true})}
+   <h3 class="disp">Offense</h3>
+   <h4>Passing</h4>${tbl(["Player","CMP","ATT","PCT","YDS","TD","INT","LG","Notes"], g.passing, {num:[1,2,3,4,5,6,7], note:8})}
+   <h4>Rushing</h4>${tbl(["Player","ATT","YDS","AVG","TD","LG","Notes"], g.rushing, {num:[1,2,3,4,5], note:6})}
+   <h4>Receiving</h4>${tbl(["Player","REC","TGT","YDS","AVG","TD","LG","Notes"], g.receiving, {num:[1,2,3,4,5,6], note:7})}
+   <h4>Blocking highlights</h4>${tbl(["Player","Play","Credit"], g.blocking, {num:[1], note:2})}
+   <h3 class="disp">Defense</h3>
+   ${tbl(["Player","SOLO","AST","TOT","SACK","PRESS","FF","PBU","Notes"], g.defense, {num:[1,2,3,4,5,6,7], note:8})}
+   <p class="note">PRESS = pressures/hurries · FF = forced fumble · PBU = pass broken up</p>
+   <h4>Takeaways</h4>${tbl(["Play","Situation","What happened"], g.takeaways, {num:[0], note:2})}
+   <h3 class="disp">Play-by-play</h3><p class="note">${esc(g.pbpNote||"")}</p>
+   <div class="pbp">${g.pbp.map(r=>{ const [n,side,dd,play,gain,res,note]=r; const good = res && (side==='O' ? /TD|1ST|DOWNS/.test(res) : /FUM|SACK|DOWNS|INC/.test(res)); const bad = res && (side==='O' ? /SACK|BOTCHED/.test(res) : /TD/.test(res));
+     return `<div class="pr ${side==='O'?'o':'d'}"><div class="pn">${esc(n)}<span>${side==='O'?'OFF':'DEF'}</span></div><div class="pb"><div class="pp">${esc(play)}${dd&&dd!=='—'?` <em>${esc(dd)}</em>`:""}</div>${note?`<div class="pt">${esc(note)}</div>`:""}</div><div class="pg"><b>${esc(gain)}</b>${res?`<span class="${good?'good':(bad?'bad':'')}">${esc(res)}</span>`:""}</div></div>`; }).join("")}</div>`;
+  window.scrollTo(0,0);
+}
+main.addEventListener("click", e=>{ const b=e.target.closest("[data-game]"); if(!b) return; go({view,render:()=>gamePage(b.dataset.game)}); });
 function depthChart(pkg){
   const O = pkg.side==="O";
   const F = O ? { X:[6,22], H:[15,31], LT:[25,22], LG:[37,22], C:[49,22], RG:[61,22], RT:[73,22], Y:[83,24.5], Z:[95,22], QB:[49,37], RB:[36,46] }
@@ -571,6 +658,9 @@ const VIEWS = {
  },
  depth(){
   main.innerHTML = `<h2 class="disp">Depth Charts</h2>` + PACKAGES.map(pkg=>`<div class="block"><h3 class="disp" style="margin-top:0">${esc(pkg.name)}</h3><div class="diagram">${depthChart(pkg)}</div></div>`).join("");
+ },
+ games(){
+  main.innerHTML = `<h2 class="disp">Games</h2>` + GAMES.map(g=>`<button class="gcard" data-game="${esc(g.id)}"><div class="disp">${esc(g.title)}</div><div class="note">vs ${esc(g.opp)} · ${esc(g.date)}</div></button>`).join("");
  },
  coach(){
   const schema = JSON.stringify({ id:"24", side:"O", name:"24", sub:"RB inside zone · 4 hole", series:"20", pkg:"base-o", summary:"What the play is.", assign:{ RB:{ job:"Your ball...", kind:"run", path:[[50,43],[62,22],[64,8]] }, LT:{ job:"Zone step right.", kind:"block", path:[[30,22],[36,15]] } } }, null, 1);
@@ -637,7 +727,18 @@ function player(name){
     });
     return x;
   };
-  main.innerHTML = h + section("O",oSpots) + section("D",dSpots);
+  let gsec="";
+  GAMES.forEach(g=>{
+    const short=name; const rows=[];
+    g.passing.filter(r=>r[0].startsWith(short)).forEach(r=>rows.push(`Passing: ${r[1]}/${r[2]}, ${r[4]} yds, ${r[5]} TD${r[8]?" — "+r[8]:""}`));
+    g.rushing.filter(r=>r[0].startsWith(short)).forEach(r=>rows.push(`Rushing: ${r[1]} att, ${r[2]} yds, ${r[4]} TD, long ${r[5]}${r[6]?" — "+r[6]:""}`));
+    g.receiving.filter(r=>r[0].startsWith(short)).forEach(r=>rows.push(`Receiving: ${r[1]} rec, ${r[3]} yds${r[7]?" — "+r[7]:""}`));
+    g.blocking.filter(r=>r[0]===short).forEach(r=>rows.push(`Blocking, play ${r[1]}: ${r[2]}`));
+    g.defense.filter(r=>r[0]===short).forEach(r=>rows.push(`Defense: ${r[3]} tackles (${r[1]} solo), ${r[4]} sack, ${r[5]} pressures, ${r[6]} FF, ${r[7]} PBU${r[8]?" — "+r[8]:""}`));
+    if(rows.length) gsec+=`<div class="block"><div class="row" style="justify-content:space-between"><div><div class="disp" style="font-size:20px">${esc(g.title)}</div><div class="note">vs ${esc(g.opp)} · ${esc(g.date)}</div></div><button class="chip btn" data-game="${esc(g.id)}">Box score →</button></div>${rows.map(t=>`<div class="resp"><div class="what">${esc(t)}</div></div>`).join("")}</div>`;
+  });
+  if(gsec) gsec=`<h3 class="disp">Games</h3>`+gsec;
+  main.innerHTML = h + section("O",oSpots) + section("D",dSpots) + gsec;
   wirePlays();
 }
 
