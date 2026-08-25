@@ -153,18 +153,18 @@ const GROUP = { X:"WR", Z:"WR", Y:"TE", H:"H", LT:"OL", LG:"OL", C:"OL", RG:"OL"
 
 /* Offense formations (100 wide, offense faces up, LOS at y=20). Plays reference one by key. */
 const FORMATIONS = {
- "base-right":   { name:"Base Right", code:"(11) RT", desc:"Y attached tight to the RT. H in the left slot, off the ball. X and Z wide on the line. QB under center, RB offset left.",
-                   attached:["Y"], spots:{ X:[8,22], H:[19,29], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,28], RB:[43,36] } },
- "pistol-right": { name:"Pistol Base Right", code:"(11) RT Pistol", desc:"Base Right with the QB in the pistol and the RB directly behind him.",
-                   attached:["Y"], spots:{ X:[8,22], H:[19,29], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,32], RB:[50,40] } },
- "base-left":    { name:"Base Left", code:"(11) LT", desc:"Base Right flipped: Y attached to the left, Z wide left, H in the right slot, X wide right. RB offset to the right.",
-                   attached:["Y"], spots:{ Z:[8,22], Y:[22.5,24], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], H:[81,29], X:[92,22], QB:[50,28], RB:[57,36] } },
+ "base-right":   { name:"Base Right", code:"(11) RT", desc:"Y attached tight to the RT. H in the left slot, off the ball. X and Z wide on the line. QB in the gun, RB beside him on the left.",
+                   attached:["Y"], spots:{ X:[8,22], H:[19,29], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,33], RB:[42,35] } },
+ "pistol-right": { name:"Pistol Base Right", code:"(11) RT Pistol", desc:"Base Right with the RB directly behind the QB instead of beside him.",
+                   attached:["Y"], spots:{ X:[8,22], H:[19,29], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,31], RB:[50,39] } },
+ "base-left":    { name:"Base Left", code:"(11) LT", desc:"Base Right flipped: Y attached to the left, Z wide left, H in the right slot, X wide right. QB in the gun, RB beside him on the right.",
+                   attached:["Y"], spots:{ Z:[8,22], Y:[22.5,24], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], H:[81,29], X:[92,22], QB:[50,33], RB:[58,35] } },
  "doubles-right": { name:"Doubles Right", code:"2x2", desc:"Two receivers each side: X wide left with H in the slot, Z wide right with Y in the slot. QB in the gun, RB beside him to the boundary side.",
                     spots:{ X:[8,22], H:[21,29], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[79,29], Z:[92,22], QB:[52,33], RB:[43,35] } },
- "pro-right": { name:"Pro Right", code:"(21) RT", desc:"Y attached to the right off the ball, X and Z on the line, QB under center, split backs — RB (F) on the left, H (B) on the right.",
-                attached:["Y"], spots:{ X:[8,22], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,28], RB:[43,37], H:[57,37] } },
- "pro-left":  { name:"Pro Left", code:"(21) LT", desc:"Pro Right flipped: Y attached to the left, Z on the line left, X on the line right, backs mirrored — H (B) on the left, RB (F) on the right.",
-                attached:["Y"], spots:{ Z:[8,22], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[22.5,24], X:[92,22], QB:[50,28], H:[43,37], RB:[57,37] } }
+ "pro-right": { name:"Gun Right", code:"(21) RT", desc:"Y attached to the right off the ball, X and Z on the line. QB in the gun with both backs beside him — RB on the left, H on the right.",
+                attached:["Y"], spots:{ X:[8,22], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[77.5,24], Z:[92,22], QB:[50,33], RB:[42,35], H:[58,35] } },
+ "pro-left":  { name:"Gun Left", code:"(21) LT", desc:"Gun Right flipped: Y attached to the left, Z on the line left, X on the line right. QB in the gun, backs mirrored — H on the left, RB on the right.",
+                attached:["Y"], spots:{ Z:[8,22], LT:[30,22], LG:[40,22], C:[50,22], RG:[60,22], RT:[70,22], Y:[22.5,24], X:[92,22], QB:[50,33], H:[42,35], RB:[58,35] } }
 };
 const OFORM = FORMATIONS["base-right"].spots;
 const ONLINE = ["X","LT","LG","C","RG","RT","Z"];
@@ -190,7 +190,7 @@ const GUIDE = {
  OL:{ title:"Offensive Line — Zone Blocking", text:"We zone block toward the play call. EVEN second number, everybody steps RIGHT; ODD, everybody steps LEFT. Play-side tackle + tight end (or H) double team the end, then the tackle sheds and climbs to the linebacker. Center + play-side guard double team the tackle; if he shoots the A gap the guard chips him and climbs to the linebacker. Backside guard takes the tackle if he comes into the A gap. Backside tackle chips the end and climbs to the linebacker — unless the tackle shoots the B gap, then he fills that hole. Every double team: four hands on him, drive him, and the one who is not needed goes to a linebacker. TOSS RULE (27 and 28 only): if you are a backside guard or tackle and nobody is lined up on you, pull to the play side and lead around the corner. Never chase a defender backwards, stay square, keep your feet moving." },
  QB:{ title:"Quarterback", text:"1-back. You run the huddle and the cadence. Make sure the handoff is clean before anything else — ball security first. Sell every fake like it's the real play." },
  RB:{ title:"Running Back — 2 back", text:"You are the 2 back. Any play that starts with a 2 is your ball. The second number is the hole. Even holes are right of center, odd holes are left. Take the handoff with the inside arm up, read the first defender at the hole, and make one cut — then get north." },
- H:{ title:"H-back — 3 back", text:"You are the 3 back. Any play that starts with a 3 is your ball. From the slot (Base) you are a blocker on every 20-series run and you have to get off the ball FAST: run to your side (odd) — block the Edge; run away from you (even) — climb and block the linebacker on your side. From Pro (in the backfield) you lead block through the hole for the RB." },
+ H:{ title:"H-back — 3 back", text:"You are the 3 back. Any play that starts with a 3 is your ball. From the slot (Base) you are a blocker on every 20-series run and you have to get off the ball FAST: run to your side (odd) — block the Edge; run away from you (even) — climb and block the linebacker on your side. From Gun (in the backfield next to the QB) you lead block through the hole for the RB." },
  TE:{ title:"Y / Tight End", text:"Attached to the RT, off the ball. On runs your way you're another zone blocker on the front side. On runs away you cut off the backside pursuit. On pass, you're the first read for the QB." },
  WR:{ title:"X and Z Receivers", text:"X is on the line to the left, Z is on the line to the right outside the Y. On every run play your job is to stalk block the corner — drive off the ball like it's a pass, get square, and stay between him and the runner." },
  DE:{ title:"Defensive End", text:"Head-up on the tackle. Every down, run or pass, you go to your B gap — the gap between the guard and the tackle. Get in it on the snap, stay square, keep your outside arm free." },
@@ -213,7 +213,7 @@ const PLAYS = [
    assign:{
      RB:{ dyn:true, job:"Your ball — even number means you're going RIGHT. {gap} Take the handoff with your inside arm up, aim at the {hole} hole, read the first defender there, one cut, get north. Never dance.", kind:"run" },
      H:{ job:"Even number = the ball is going AWAY from you. Get off the ball fast and climb straight to the linebacker on your side — the OLB. Cut him off before he can flow to the ball. Same on 22, 24, 26 and 28.", kind:"block", path:[[19,29],[22,20],[27,12]] },
-     QB:{ job:"Even number = open to your RIGHT. Reverse out, hand the ball to the RB deep in his belly (on 28 it's a TOSS — pitch it out in front of him), then carry out a boot fake to the LEFT. Sell it every time.", kind:"fake", path:[[50,28],[47,33],[36,36]] },
+     QB:{ job:"Even number = open to your RIGHT. Reverse out, hand the ball to the RB deep in his belly (on 28 it's a TOSS — pitch it out in front of him), then carry out a boot fake to the LEFT. Sell it every time.", kind:"fake", path:[[50,33],[46,36],[36,38]] },
      LT:{ job:"Even number = zone step RIGHT. You are backside: chip the End with your inside shoulder, then climb and block the backside LB. One exception — if the DT shoots into the B gap between you and the LG, he's yours: fill that hole and block him. Same on 22, 24, 26 and 28.", kind:"block", path:[[30,22],[27,18],[31,11]], alt:[[30,22],[34,16]], byHole:{8:{ job:"28 TOSS — if nobody is lined up on you (uncovered), PULL to the play side: run flat behind the line to the right, get around the corner, and block the first defender that shows outside. If you are covered, chip the End and climb like normal.", path:[[30,22],[34,32],[62,32],[78,23],[85,15]], alt:null }} },
      LG:{ job:"Even number = zone step RIGHT. Take the DT if he shoots into the A gap between you and the center. If he shoots the B gap instead, the LT has him — you keep stepping right and climb to the backside LB. Same on every even play.", kind:"block", path:[[40,22],[45,16]], alt:[[40,22],[44,14],[49,9]], byHole:{8:{ job:"28 TOSS — if nobody is lined up on you (uncovered), PULL to the play side: run flat behind the line to the right, get around the corner, and kick out the first defender that shows outside. If you are covered, take him like normal.", path:[[40,22],[44,30],[64,30],[80,21],[87,13]], alt:null }} },
      C:{ job:"Even number = zone step RIGHT. Double team the play-side DT with the RG — four hands on him, drive him back. If he shoots the A gap the RG chips him and leaves; you stay on him. Same on every even play.", kind:"block", path:[[50,22],[55,16]] },
@@ -228,7 +228,7 @@ const PLAYS = [
    assign:{
      RB:{ dyn:true, job:"Your ball — odd number means you're going LEFT. {gap} Take the handoff with your inside arm up, aim at the {hole} hole, read the first defender there, one cut, get north.", kind:"run" },
      H:{ job:"Odd number = the ball is coming to YOUR side. Get off the ball FAST and double team the DE with the LT; when the LT sheds to the LB, the DE is all yours — keep him sealed. On 27 you block the Edge instead: head outside him, wall him in. That block springs the sweep. Same on every odd play.", kind:"block", path:[[19,29],[27,17]], alt:[[19,29],[21,22],[23,17]], byHole:{7:{ path:[[19,29],[21,22],[23,17]], alt:null }} },
-     QB:{ job:"Odd number = open to your LEFT. Reverse out, hand the ball to the RB (on 27 it's a TOSS — pitch it out in front of him), then carry out a boot fake to the RIGHT. Sell it every time.", kind:"fake", path:[[50,28],[53,33],[64,36]] },
+     QB:{ job:"Odd number = open to your LEFT. Reverse out, hand the ball to the RB (on 27 it's a TOSS — pitch it out in front of him), then carry out a boot fake to the RIGHT. Sell it every time.", kind:"fake", path:[[50,33],[54,36],[64,38]] },
      LT:{ job:"Odd number = zone step LEFT. Double team the DE with the H. Once he's moving, shed the double team and climb to the play-side LB. Same on 21, 23, 25 and 27.", kind:"block", path:[[30,22],[27,16],[31,10]] },
      LG:{ job:"Odd number = zone step LEFT. Double team the DT with the center. If the DT shoots the A gap, chip him (one hard shot) and move up to the LB. On 23 the RB is reading your block. Same on every odd play.", kind:"block", path:[[40,22],[44,17],[49,9]] },
      C:{ job:"Odd number = zone step LEFT. Double team the play-side DT with the LG — four hands on him, drive him back. If he shoots the A gap the LG chips him and leaves; you stay on him. Same on every odd play.", kind:"block", path:[[50,22],[45,16]] },
@@ -241,9 +241,9 @@ const PLAYS = [
  { id:"38", side:"O", name:"H Jet 38 Sweep", sub:"H jet motion · H to the 8 hole (outside right)", series:"30", pkg:"base-o", formation:"base-right",
    summary:"H jet motions from the left slot toward the QB. On the snap the QB hands to the H at full speed going right — stretch it to the 8 hole. Then the QB fakes the handoff to the RB going left. Line zones right.",
    assign:{
-     H:{ job:"Your ball. Jet motion toward the QB — full speed, don't slow down. Take the handoff on the run, stretch to the 8 hole outside the Y, read the Y's block on the Edge: outside if he seals him in, cut up if the corner comes down.", kind:"run", pre:[[19,29],[40,31]], path:[[40,31],[52,30],[70,29],[86,22],[88,8]] },
-     QB:{ job:"Take the snap, turn and hand to the H as he crosses — quick, ball out front. Then keep turning and fake the handoff to the RB going left. Sell it.", kind:"fake", path:[[50,28],[47,32],[40,34]] },
-     RB:{ job:"Fake. Take the fake handoff going left like it's 27 sweep and run it out to the 7 hole. Make the backside chase you.", kind:"fake", path:[[43,36],[32,39],[22,36]] },
+     H:{ job:"Your ball. Jet motion toward the QB — full speed, don't slow down. Cross in front of the QB and take the handoff on the run, stretch to the 8 hole outside the Y, read the Y's block on the Edge: outside if he seals him in, cut up if the corner comes down.", kind:"run", pre:[[19,29],[38,29]], path:[[38,29],[52,29.5],[70,28],[86,22],[88,8]] },
+     QB:{ job:"Take the snap, turn and hand to the H as he crosses — quick, ball out front. Then keep turning and fake the handoff to the RB going left. Sell it.", kind:"fake", path:[[50,33],[47,36],[38,37]] },
+     RB:{ job:"Fake. Take the fake handoff going left like it's 27 sweep and run it out to the 7 hole. Make the backside chase you.", kind:"fake", path:[[42,35],[32,38],[22,36]] },
      Y:{ job:"Reach the Edge. Step play-side, get your head outside him and seal him in. This is the block the H reads.", kind:"block", path:[[77.5,24],[82,17]] },
      Z:{ job:"Stalk block the corner. Drive off like a pass, get square, stay between him and the H.", kind:"block", path:[[92,22],[92,10]] },
      RT:{ job:"Zone step right. Reach the DE; if you can't, run him past the play.", kind:"block", path:[[70,22],[76,15]] },
@@ -257,8 +257,8 @@ const PLAYS = [
    summary:"Same H jet motion as H Jet 38 Sweep. QB fakes the handoff to the H going right, then hands to the RB going back the other way to the 7 hole. Line zones left. The H sells the sweep at full speed.",
    assign:{
      RB:{ job:"Your ball. Let the H cross in front of you, take the handoff going left, and get to the 7 hole outside the tackle. Be patient — the defense is chasing the jet.", kind:"run", path:[[43,36],[34,39],[20,36],[12,25],[12,6]] },
-     H:{ job:"Jet motion toward the QB at full speed. Fake the handoff and keep running the sweep to the right like you have the ball — you don't slow down until the whistle.", kind:"fake", pre:[[19,29],[40,31]], path:[[40,31],[52,30],[70,29],[86,22]] },
-     QB:{ job:"Take the snap, fake the hand to the H as he crosses, then turn back and hand to the RB going left. Carry out a boot fake right.", kind:"fake", path:[[50,28],[49,33],[58,36]] },
+     H:{ job:"Jet motion toward the QB at full speed. Fake the handoff and keep running the sweep to the right like you have the ball — you don't slow down until the whistle.", kind:"fake", pre:[[19,29],[38,29]], path:[[38,29],[52,29.5],[70,28],[86,22]] },
+     QB:{ job:"Take the snap, fake the hand to the H as he crosses, then turn back and hand to the RB going left. Carry out a boot fake right.", kind:"fake", path:[[50,33],[52,36],[62,38]] },
      LT:{ job:"Zone step left. Reach the Edge; if you can't, run him past the play.", kind:"block", path:[[30,22],[24,15]] },
      LG:{ job:"Zone step left. Reach the DE and keep working outside.", kind:"block", path:[[40,22],[34,15]] },
      C:{ job:"Zone step left. Reach the NG, cut off the backside A gap.", kind:"block", path:[[50,22],[45,15]] },
@@ -332,7 +332,7 @@ const PLAYS = [
    summary:"Looks like a run. The Y chips the DE like he's blocking, then turns around immediately at 3–5 yards looking for the ball. QB throws it FAST. If the Y isn't open, the QB rolls right and looks to run, or hits the RB in the flat. X and Z run go routes to clear the corners out; H protects the backside.",
    assign:{
      Y:{ job:"Your ball. Fire off like it's a run and chip the DE — one hard hit with your inside shoulder. Then turn around IMMEDIATELY, 3–5 yards deep, hands up, eyes on the QB. The ball is coming right now. Catch it, turn upfield.", kind:"route", path:[[77.5,24],[73,19],[76,14],[75,16]] },
-     QB:{ job:"Quick. Snap, one step back, throw to the Y as he turns — do not wait. If he's covered, roll RIGHT: look to run first; if the flat is open, hit the RB. Never throw back across the field.", kind:"fake", path:[[50,28],[50,32],[62,34],[76,32]] },
+     QB:{ job:"Quick. Snap, one step back, throw to the Y as he turns — do not wait. If he's covered, roll RIGHT: look to run first; if the flat is open, hit the RB. Never throw back across the field.", kind:"fake", path:[[50,33],[52,36],[64,37],[78,34]] },
      RB:{ job:"Snap, go. Run a 5-yard flat route to the Y side — get to the sideline at 5 yards fast and look back for the ball. You are the QB's second option when he rolls.", kind:"route", path:[[43,36],[58,33],[80,26],[93,14]] },
      X:{ job:"Go route. Take off — clear your corner out of there so the Y and the flat are open underneath. Look for the ball only if you're wide open.", kind:"route", path:[[8,22],[8,0]] },
      Z:{ job:"Go route. Take off and clear your corner out — the RB is coming to your flat. Look for the ball only if you're wide open.", kind:"route", path:[[92,22],[93,0]] },
