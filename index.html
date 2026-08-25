@@ -183,7 +183,7 @@ const LEAD = { 1:"Lead through the 1 hole and clean out the first defender there
                7:"Arc block: get outside and kick out the force player (Edge or OLB). The RB runs off your block.", 8:"Run across and arc block: get outside and kick out the force player. The RB runs off your block." };
 const holeText = (t,h) => t.replace("{hole}",h).replace("{gap}",GAP[h]||"").replace("{lead}",LEAD[h]||"");
 /* Defense formation coordinates (defense faces down, LOS at y=20, deep = smaller y) */
-const DFORM = { CBL:[8,17], EDGEL:[23,17], DEL:[37,17], NG:[50,17], DER:[63,17], EDGER:[77,17], CBR:[92,17], OLBL:[31,9], MIKE:[50,9], OLBR:[69,9], S:[50,-4] };
+const DFORM = { CBL:[8,17], EDGEL:[23,17], DEL:[37,17], NG:[53.5,17], DER:[63,17], EDGER:[77,17], CBR:[92,17], OLBL:[31,9], MIKE:[50,9], OLBR:[69,9], S:[50,-4] };
 
 /* General position guides */
 const GUIDE = {
@@ -194,7 +194,7 @@ const GUIDE = {
  TE:{ title:"Y / Tight End", text:"Attached to the RT, off the ball. On runs your way you're another zone blocker on the front side. On runs away you cut off the backside pursuit. On pass, you're the first read for the QB." },
  WR:{ title:"X and Z Receivers", text:"X is on the line to the left, Z is on the line to the right outside the Y. On every run play your job is to stalk block the corner — drive off the ball like it's a pass, get square, and stay between him and the runner." },
  DE:{ title:"Defensive End", text:"Head-up on the tackle. Every down, run or pass, you go to your B gap — the gap between the guard and the tackle. Get in it on the snap, stay square, keep your outside arm free." },
- NG:{ title:"Nose Guard / DT", text:"Head-up on the center. Every down, run or pass, you go to the strong-side A gap — the gap between the center and the guard on the side the Y/TE lines up. Find the Y before the snap, then get in that gap and don't get pushed back." },
+ NG:{ title:"Nose Guard / DT", text:"You line up IN the strong-side A gap — between the center and the guard on the side the Y/TE is on (no TE? the RB's side). Find the Y before the snap and get in that gap. Then every single snap, run or pass, you stunt hard through it: low, fast, first step on the snap. You are not reading anything — you are going. Never get pushed back." },
  EDGE:{ title:"Edge", text:"Just outside the tackle (or the Y). Every snap you arc: get upfield around the outside. Run: squeeze back in behind the tackle and contain — nothing gets outside you, turn it back inside. Pass: keep arcing and get to the QB." },
  OLB:{ title:"Outside Linebacker", text:"Stacked 4–5 yards deep behind the DE/Edge area. Run: your gap is the C gap (just outside the tackle, between the DE and the Edge) — first step forward, into it. But read the ball: if it's coming to your C gap, fill it and attack; if it goes anywhere else, don't stand in an empty gap — flow to the ball and hit him. Never take a step backward on a run. Pass (Cover 3): drop to your flat. Zone is not standing in a spot — find the receiver in your flat and stay with him until he leaves it. If the QB rolls toward you, get to the flat fast; if he rolls away, slide hard into the middle and find the crosser." },
  MIKE:{ title:"Mike Linebacker", text:"Middle, 4–5 yards deep behind the NG. Run: read the RB and go get him. You don't have a gap — flow with the ball, first step forward, come downhill and attack through the first open lane. Never take a step backward on a run. Pass (Cover 3): drop to the middle zone and read the QB's eyes. Zone is not standing in a spot — find the receiver in your zone and stay with him until he leaves it. If the QB rolls out, slide to that side of your zone — go where he's looking, not where he is." },
@@ -356,7 +356,7 @@ const PLAYS = [
      EDGER:{ job:"Arc rush around the outside (around the Y). Contain, then get to the QB.", kind:"run", path:[[77,17],[80,24],[74,30]] },
      DEL:{ job:"Stunt — slant hard into your B gap (guard/tackle).", kind:"run", path:[[37,17],[40.5,28]] },
      DER:{ job:"Stunt — slant hard into your B gap (guard/tackle).", kind:"run", path:[[63,17],[59.5,28]] },
-     NG:{ job:"Stunt — slant to the strong-side A gap (the side the Y/TE is on).", kind:"run", path:[[50,17],[53.5,28]] }
+     NG:{ job:"Line up in the strong-side A gap (Y/TE side) and stunt hard through it — same as every snap. Get to the QB.", kind:"run", path:[[53.5,17],[53.5,29]] }
    } },
  { id:"cover3-roll", side:"D", name:"Cover 3 vs. Rollout", sub:"QB rolls right · zones slide with him · mirror it if he rolls left", pkg:"base-d",
    ghost:{ path:[[50,31],[57,33],[68,33]] },
@@ -372,7 +372,7 @@ const PLAYS = [
      EDGEL:{ job:"He's rolling away. Rush and chase from behind — but stay in your lane so he can't reverse back out.", kind:"run", path:[[23,17],[21,26],[38,32]] },
      DEL:{ job:"Rush your B gap, then flatten down the line and chase the roll.", kind:"run", path:[[37,17],[40.5,25],[52,30]] },
      DER:{ job:"Rush your B gap and push toward the QB — collapse the pocket on the roll side.", kind:"run", path:[[63,17],[59.5,25],[64,30]] },
-     NG:{ job:"Strong-side A gap, push the pocket, then chase.", kind:"run", path:[[50,17],[53.5,25],[58,30]] }
+     NG:{ job:"Strong-side A gap, stunt hard through it, then chase the roll.", kind:"run", path:[[53.5,17],[53.5,26],[58,30]] }
    } },
  { id:"cover3-trips", side:"D", name:"Cover 3 vs. Trips", sub:"3 receivers to one side · safety shades to trips · backside corner carries #1", pkg:"base-d",
    ghosts:[[37,25,"T"],[43.5,25,"G"],[50,25,"C"],[56.5,25,"G"],[63,25,"T"],[50,31,"Q"],[44,33,"R"],[10,25,"X"],[90,25,"Z"],[80,29,"Y"],[71,29,"H"]],
@@ -389,11 +389,11 @@ const PLAYS = [
      EDGER:{ job:"Arc rush, contain. Nothing changes.", kind:"run", path:[[77,17],[80,24],[74,30]] },
      DEL:{ job:"B gap. Nothing changes.", kind:"run", path:[[37,17],[40.5,28]] },
      DER:{ job:"B gap. Nothing changes.", kind:"run", path:[[63,17],[59.5,28]] },
-     NG:{ job:"Strong-side A gap — strong side is the trips side here.", kind:"run", path:[[50,17],[53.5,28]] }
+     NG:{ job:"Strong-side A gap — strong side is the trips side here. Line up in it, stunt hard through it.", kind:"run", path:[[53.5,17],[53.5,29]] }
    } },
  { id:"cover3-doubles", side:"D", name:"Cover 3 vs. Doubles", sub:"2 receivers each side · OLBs align outside the tackles · corners bail fast", pkg:"base-d",
    ghosts:[[37,25,"T"],[43.5,25,"G"],[50,25,"C"],[56.5,25,"G"],[63,25,"T"],[52,32,"Q"],[44,33,"R"],[8,25,"X"],[21,29,"H"],[79,29,"Y"],[92,25,"Z"]],
-   align:{ OLBL:[33,9], OLBR:[67,9] },
+   align:{ OLBL:[33,9], OLBR:[67,9], NG:[46.5,17] },
    summary:"Two receivers on each side. Both OLBs line up just outside the tackles so they can get to the slot receiver fast. Corners bail immediately — with a slot on each side, a vertical route can come from EITHER receiver on your side, and it is yours.",
    assign:{
      OLBL:{ job:"Line up just OUTSIDE the tackle, not stacked behind him. On the snap get to the slot receiver on your side, get a hand on him and re-route him, then find whoever is in your flat and stay with him until he leaves it.", kind:"zone", path:[1,4,20,11], from:[33,9] },
@@ -406,14 +406,14 @@ const PLAYS = [
      EDGER:{ job:"Arc rush, contain. Nothing changes.", kind:"run", path:[[77,17],[80,24],[74,30]] },
      DEL:{ job:"B gap. Nothing changes.", kind:"run", path:[[37,17],[40.5,28]] },
      DER:{ job:"B gap. Nothing changes.", kind:"run", path:[[63,17],[59.5,28]] },
-     NG:{ job:"Strong-side A gap — no TE, so go to the side the RB is on.", kind:"run", path:[[50,17],[46.5,28]] }
+     NG:{ job:"No TE, so strong side is the side the RB is on. Line up in that A gap and stunt hard through it.", kind:"run", path:[[46.5,17],[46.5,29]] }
    } },
  { id:"base-run", side:"D", name:"Base Run Fit", sub:"3-5-3 vs. the run · front holds gaps, LBs read and attack", pkg:"base-d",
-   summary:"The front has gaps: DEs in the B gaps, NG in the strong-side A gap, Edges set the edge, corners force. The OLBs own the C gaps first, then read — if the ball goes somewhere else they flow to it. The Mike has no gap; he reads the ball and attacks. All three: always forward, never backward. Everybody in front of them keeps the blockers off so they can run free to the ball.",
+   summary:"The front has gaps: DEs in the B gaps, NG lined up in the strong-side A gap and stunting through it every snap, Edges set the edge, corners force. The OLBs own the C gaps first, then read — if the ball goes somewhere else they flow to it. The Mike has no gap; he reads the ball and attacks. All three: always forward, never backward. Everybody in front of them keeps the blockers off so they can run free to the ball.",
    assign:{
      DEL:{ job:"B gap — between the guard and the tackle. Get in it on the snap, keep your outside arm free. Every down.", kind:"run", path:[[37,17],[40.5,26]] },
      DER:{ job:"B gap — between the guard and the tackle. Get in it on the snap, keep your outside arm free. Every down.", kind:"run", path:[[63,17],[59.5,26]] },
-     NG:{ job:"Strong-side A gap — the gap between the center and the guard on the side the Y/TE is on. Get in it on the snap and do not get pushed back. Every down.", kind:"run", path:[[50,17],[53.5,26]] },
+     NG:{ job:"Line up IN the strong-side A gap — between the center and the guard on the side the Y/TE is on. Every snap: stunt hard through that gap, low and fast. You are not reading anything, you are going. Never get pushed back.", kind:"run", path:[[53.5,17],[53.5,27]] },
      EDGEL:{ job:"Arc and contain. Take your arc upfield around the outside like every snap, then squeeze back in behind the tackle. Nothing gets outside you — turn the ball back inside to the linebackers.", kind:"run", path:[[23,17],[19,24],[24,31],[32,32]] },
      EDGER:{ job:"Arc and contain. Take your arc upfield around the outside (around the Y) like every snap, then squeeze back in behind the tackle. Nothing gets outside you — turn the ball back inside to the linebackers.", kind:"run", path:[[77,17],[81,24],[76,31],[68,32]] },
      OLBL:{ job:"Your gap is the C gap — just outside the tackle, between the DE and the Edge. First step is forward, into it. But you are a READER: if the ball is coming to your C gap, fill it and attack. If it goes anywhere else, don't stand in an empty gap — flow to the ball, downhill through the first open lane, and hit him. Never a step backward.", kind:"run", path:[[31,9],[30,16],[32,23]], alt:[[31,9],[40,17],[48,22]] },
@@ -466,7 +466,7 @@ function diagram(play, highlight, fkey, hole){
   for(let y=top;y<top+h;y+=5) s+=`<rect x="0" y="${y}" width="100" height="5" fill="${((y-top)/5)%2?'#27603a':'#2d6a3e'}"/>`;
   s+=`<rect x="0" y="19.7" width="100" height=".6" fill="#f4f3ec"/>`;
   // ghost opponents
-  if(O){ [[31,15,"DE"],[50,15,"NG"],[69,15,"DE"],[23,15,"E"],[78,15,"E"],[31,8,"LB"],[50,8,"LB"],[69,8,"LB"],[8,13,"CB"],[92,13,"CB"]].forEach(([x,y,t])=>s+=ghost(x,y,t)); }
+  if(O){ [[31,15,"DE"],[54,15,"NG"],[69,15,"DE"],[23,15,"E"],[78,15,"E"],[31,8,"LB"],[50,8,"LB"],[69,8,"LB"],[8,13,"CB"],[92,13,"CB"]].forEach(([x,y,t])=>s+=ghost(x,y,t)); }
   else { (play.ghosts||[[37,25,"T"],[43.5,25,"G"],[50,25,"C"],[56.5,25,"G"],[63,25,"T"],[70,25,"Y"],[50,31,"Q"],[50,38,"R"],[12,25,"X"],[90,25,"Z"],[22,29,"H"]]).forEach(([x,y,t])=>s+=ghost(x,y,t)); }
   if(play.ghost && play.ghost.path){ s+=`<path d="M${play.ghost.path.map(p=>p.join(",")).join(" L")}" fill="none" stroke="rgba(244,243,236,.7)" stroke-width=".7" stroke-dasharray="1.4 1" marker-end="url(#mw)"/>`; }
   // zones first
