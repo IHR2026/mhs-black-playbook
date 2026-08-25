@@ -63,8 +63,13 @@ p{line-height:1.5;font-size:15px}
 .play .b .s{font-size:12px;color:var(--muted);margin-top:2px}
 
 /* diagram */
-.diagram{background:var(--turf);border-radius:8px;overflow-x:auto;margin:10px 0;-webkit-overflow-scrolling:touch}
-.diagram svg{display:block;width:100%;min-width:760px;height:auto}
+.diagram{background:var(--turf);border-radius:8px;overflow-x:auto;margin:10px 0;-webkit-overflow-scrolling:touch;position:relative}
+.diagram svg{display:block;width:100%;height:auto}
+.diagram.zoom svg{min-width:760px}
+.diagram::after{content:"tap to zoom";position:absolute;right:8px;top:6px;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,243,236,.55);pointer-events:none}
+.diagram.zoom::after{content:"tap to fit"}
+@media (max-width:600px){ .diagram{margin-left:-16px;margin-right:-16px;border-radius:0} .block .diagram{margin-left:-14px;margin-right:-14px} }
+@media (min-width:601px){ .diagram::after{display:none} }
 
 /* responsibility card */
 .resp{border-left:3px solid var(--gold);padding:10px 12px;background:var(--ink-3);border-radius:0 6px 6px 0;margin:8px 0}
@@ -498,9 +503,9 @@ function diagram(play, highlight, fkey, hole){
     const fill = me ? "#e8393c" : (line ? "#f4f3ec" : "#101010");
     const ring = me ? "#101010" : (line ? "#101010" : "#f4f3ec");
     const tc = me ? "#101010" : (line ? "#101010" : "#e8393c");
-    const r = me?3:2.5;
+    const r = me?3.2:2.8;
     s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${ring}" stroke-width=".6"/>`;
-    s+=`<text x="${x}" y="${y+1.1}" text-anchor="middle" font-family="Bebas Neue,Impact,sans-serif" font-size="${lbl.length>2?2.1:2.7}" fill="${tc}">${lbl}</text>`;
+    s+=`<text x="${x}" y="${y+1.1}" text-anchor="middle" font-family="Bebas Neue,Impact,sans-serif" font-size="${lbl.length>2?2.3:3}" fill="${tc}">${lbl}</text>`;
   });
   return s+"</svg>";
 }
@@ -567,7 +572,7 @@ const VIEWS = {
 
 function playCard(p){ return `<button class="play" data-play="${esc(p.id)}"><div class="fld">${diagram(p)}</div><div class="b"><div class="disp">${esc(p.name)}${p.holes?` <span style="color:var(--gold);font-size:16px">${p.holes.map(h=>(p.series?p.series[0]:"")+h).join(" · ")}</span>`:""}</div><div class="s">${esc(p.sub||"")}</div></div></button>`; }
 function wirePlays(){}
-main.addEventListener("click", e=>{ const b=e.target.closest("[data-play]"); if(!b||e.target.closest("[data-hole]")) return; go({view,render:()=>playPage(b.dataset.play)}); });
+main.addEventListener("click", e=>{ const d=e.target.closest(".diagram"); if(d && window.innerWidth<=600){ d.classList.toggle("zoom"); return; } const b=e.target.closest("[data-play]"); if(!b||e.target.closest("[data-hole]")) return; go({view,render:()=>playPage(b.dataset.play)}); });
 
 function side(S){
   const pkgs=PACKAGES.filter(p=>p.side===S&&!p.hidden);
