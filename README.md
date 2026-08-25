@@ -1,7 +1,5 @@
 # MHS 6th Grade Black — Team Playbook
 
-Single-file web app (`index.html`). No build, no server.
+`index.html` is a password-gated loader. The playbook itself is stored inside it encrypted (AES-GCM, key derived from the team password), so it can be hosted publicly on GitHub Pages without being readable by anyone who doesn't have the password.
 
-**Hosting on GitHub Pages:** Settings → Pages → Source: "Deploy from a branch" → Branch: `main`, folder `/ (root)` → Save. The site will be at `https://<your-username>.github.io/<repo-name>/`.
-
-**Updating plays:** everything lives in the `DATA` block near the top of `index.html` (roster, packages, formations, `PLAYS`). Edit, commit, and the site updates in about a minute. The Coach tab inside the app documents the play format.
+**Updating:** the editable source and the build script are kept by the coach. Rebuild `index.html` from the source and upload it here; the site updates about a minute after the commit.
