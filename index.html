@@ -104,6 +104,7 @@ textarea,pre{width:100%;background:#000;color:var(--chalk);border:1px solid rgba
   <button data-v="offense">Offense</button>
   <button data-v="defense">Defense</button>
   <button data-v="plays">Plays</button>
+  <button data-v="depth">Depth</button>
   <button data-v="coach">Coach</button>
 </nav>
 <main id="main"></main>
@@ -509,6 +510,29 @@ function diagram(play, highlight, fkey, hole){
   });
   return s+"</svg>";
 }
+function depthChart(pkg){
+  const O = pkg.side==="O";
+  const F = O ? { X:[6,22], H:[15,31], LT:[25,22], LG:[37,22], C:[49,22], RG:[61,22], RT:[73,22], Y:[83,24.5], Z:[95,22], QB:[49,37], RB:[36,46] }
+              : { CBL:[6,16], EDGEL:[21,16], DEL:[36,16], NG:[50,16], DER:[64,16], EDGER:[79,16], CBR:[94,16], OLBL:[31,1], MIKE:[50,1], OLBR:[69,1], S:[50,-14] };
+  const attached = O ? ["Y"] : [];
+  const vb = O ? "0 0 100 58" : "0 -22 100 57";
+  const top = O?0:-22, h = O?58:57;
+  let s = `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">`;
+  for(let y=top;y<top+h;y+=5) s+=`<rect x="0" y="${y}" width="100" height="5" fill="${((y-top)/5)%2?'#27603a':'#2d6a3e'}"/>`;
+  s+=`<rect x="0" y="${O?19.7:26.7}" width="100" height=".6" fill="#f4f3ec"/>`;
+  if(O){ [[31,15,"DE"],[50,15,"NG"],[69,15,"DE"],[23,15,"E"],[78,15,"E"],[31,8,"LB"],[50,8,"LB"],[69,8,"LB"],[8,13,"CB"],[92,13,"CB"]].forEach(([x,y,t])=>s+=ghost(x,y,t)); }
+  else { [[37,31,"T"],[43.5,31,"G"],[50,31,"C"],[56.5,31,"G"],[63,31,"T"]].forEach(([x,y,t])=>s+=ghost(x,y,t)); }
+  Object.entries(F).forEach(([spot,[x,y]])=>{
+    const names = pkg.spots[spot]||[];
+    const line = O ? (ONLINE.includes(spot)||attached.includes(spot)) : ["CBL","EDGEL","DEL","NG","DER","EDGER","CBR"].includes(spot);
+    const lbl = labelOf(spot,pkg);
+    s+=`<circle cx="${x}" cy="${y}" r="2.6" fill="${line?'#f4f3ec':'#101010'}" stroke="${line?'#101010':'#f4f3ec'}" stroke-width=".6"/>`;
+    s+=`<text x="${x}" y="${y+1}" text-anchor="middle" font-family="Bebas Neue,Impact,sans-serif" font-size="${lbl.length>2?2.1:2.7}" fill="${line?'#101010':'#e8393c'}">${lbl}</text>`;
+    if(names[0]){ const w=Math.max(7,names[0].length*1.0+1.6); s+=`<rect x="${x-w/2}" y="${y+3.4}" width="${w}" height="3" rx=".5" fill="#f4f3ec"/><text x="${x}" y="${y+5.6}" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-weight="700" font-size="1.9" fill="#101010">${esc(names[0])}</text>`; }
+    if(names[1]){ const w=Math.max(7,names[1].length*0.9+1.6); s+=`<rect x="${x-w/2}" y="${y+6.8}" width="${w}" height="2.7" rx=".4" fill="#101010"/><text x="${x}" y="${y+8.75}" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-weight="600" font-size="1.7" fill="#f4f3ec">${esc(names[1])}</text>`; }
+  });
+  return s+"</svg>";
+}
 function ghost(x,y,t){ return `<circle cx="${x}" cy="${y}" r="1.9" fill="none" stroke="rgba(244,243,236,.45)" stroke-width=".35" stroke-dasharray=".7 .5"/><text x="${x}" y="${y+.8}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="1.8" fill="rgba(244,243,236,.55)">${t}</text>`; }
 
 /* ---------- views ---------- */
@@ -544,6 +568,9 @@ const VIEWS = {
    <div class="plays" style="margin-top:10px">${plays.filter(p=>p.side==="D").map(playCard).join("")}</div>
    <div class="legend"><span><i style="background:#e8393c"></i>Ball carrier / rush</span><span><i style="background:#f4f3ec"></i>Route, block or drop</span><span><i style="background:repeating-linear-gradient(90deg,#f4f3ec 0 4px,transparent 4px 7px)"></i>Fake / conversion</span><span><i style="background:repeating-linear-gradient(90deg,#f4f3ec 0 2px,transparent 2px 5px)"></i>Motion</span></div>`;
   wirePlays();
+ },
+ depth(){
+  main.innerHTML = `<h2 class="disp">Depth Charts</h2>` + PACKAGES.map(pkg=>`<div class="block"><h3 class="disp" style="margin-top:0">${esc(pkg.name)}</h3><div class="diagram">${depthChart(pkg)}</div></div>`).join("");
  },
  coach(){
   const schema = JSON.stringify({ id:"24", side:"O", name:"24", sub:"RB inside zone · 4 hole", series:"20", pkg:"base-o", summary:"What the play is.", assign:{ RB:{ job:"Your ball...", kind:"run", path:[[50,43],[62,22],[64,8]] }, LT:{ job:"Zone step right.", kind:"block", path:[[30,22],[36,15]] } } }, null, 1);
